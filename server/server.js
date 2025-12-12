@@ -1,4 +1,4 @@
-require("dotenv").config();
+import "dotenv/config.js";
 import { MongoClient, ServerApiVersion } from "mongodb";
 const uri =
   "mongodb+srv://juliaranne:{{ process.env.CLUSTER0_PASSWORD }}@cluster0.ncjxftj.mongodb.net/?appName=Cluster0";
