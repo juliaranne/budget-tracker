@@ -1,28 +1,42 @@
 import "dotenv/config.js";
-import { MongoClient, ServerApiVersion } from "mongodb";
-const uri = `mongodb+srv://juliaranne:${process.env.CLUSTER0_PASSWORD}@cluster0.ncjxftj.mongodb.net/?appName=Cluster0`;
+import Payment from "./models/payment.model.js";
+import express from "express";
+import mongoose from "mongoose";
 
-// Create a MongoClient with a MongoClientOptions object to set the Stable API version
-const client = new MongoClient(uri, {
-  serverApi: {
-    version: ServerApiVersion.v1,
-    strict: true,
-    deprecationErrors: true,
-  },
+const uri = `mongodb+srv://juliaranne:${process.env.CLUSTER0_PASSWORD}@cluster0.ncjxftj.mongodb.net/budget_tracker?appName=Cluster0`;
+const app = express();
+app.use(express.json());
+
+mongoose
+  .connect(uri)
+  .then(() => {
+    console.log("connected to db");
+    app.listen(3000, () => {
+      console.log("Server is running on http://localhost:3000");
+    });
+  })
+  .catch(() => {
+    console.log("failed to connect");
+  });
+
+app.get("/", (req, res) => {
+  res.send("Hello World");
 });
 
-async function run() {
+app.get("/api/payments", async (req, res) => {
   try {
-    // Connect the client to the server	(optional starting in v4.7)
-    await client.connect();
-    // Send a ping to confirm a successful connection
-    await client.db("admin").command({ ping: 1 });
-    console.log(
-      "Pinged your deployment. You successfully connected to MongoDB!"
-    );
-  } finally {
-    // Ensures that the client will close when you finish/error
-    await client.close();
+    const payments = await Payment.find({});
+    res.status(200).json(payments);
+  } catch (e) {
+    res.status(500).json({ message: e.message });
   }
-}
-run().catch(console.dir);
+});
+
+app.post("/api/payments", async (req, res) => {
+  try {
+    const payment = await Payment.create(req.body);
+    res.status(200).json(payment);
+  } catch (e) {
+    res.status(500).json({ message: e.message });
+  }
+});
