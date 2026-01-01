@@ -48,7 +48,7 @@ export default function StatsChart() {
   const yScale = d3
     .scaleBand()
     .domain(yDomain)
-    .range([0, yDomain.length * 50]);
+    .range([0, yDomain.length * 40]);
 
   const xScale = d3
     .scaleLinear()
@@ -92,18 +92,17 @@ export default function StatsChart() {
               rx={2.5}
               width={animatedWidths[i]}
               height={30}
-              fill={"#d5d5d5"}
-              stroke={"#000000"}
+              fill={i % 2 === 0 ? "teal" : "navy"}
             />
           ))}
 
           {response.data.map((item) => (
-            <ThemedView key={"label" + item.category} style={styles.text}>
+            <ThemedView key={"label" + item.category}>
               <Text
-                fontSize="14"
-                x={3}
-                y={(yScale(item.category) ?? 0) + 16}
-                textAnchor="start"
+                fontSize="16"
+                fill="white"
+                x={15}
+                y={(yScale(item.category) ?? 0) + 22}
               >
                 {item.category}
               </Text>
