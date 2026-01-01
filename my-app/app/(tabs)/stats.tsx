@@ -30,12 +30,6 @@ const response = {
   ],
 };
 
-// interface Payment {
-//   category: string;
-//   date: string;
-//   value: number;
-// }
-
 const GRAPH_APSECT_RATIO = 19.5 / 9;
 
 export default function StatsChart() {
@@ -45,6 +39,7 @@ export default function StatsChart() {
   const yDomain = response.data.map((item) => item.category);
   const highestVal = Math.max(...response.data.map((item) => item.value));
 
+  // Y height - number of categories * height of bar chart and space
   const yScale = d3
     .scaleBand()
     .domain(yDomain)
@@ -116,15 +111,6 @@ export default function StatsChart() {
 
 const styles = StyleSheet.create({
   container: {
-    // flex: 1,
-    marginTop: 50,
-  },
-  link: {
-    marginTop: 15,
-    paddingVertical: 15,
-    fontSize: 20,
-  },
-  text: {
-    // transform: [{ rotateY: "45deg" }],
+    marginTop: 20,
   },
 });
