@@ -32,7 +32,7 @@ app.get("/api/payments", async (req, res) => {
   }
 });
 
-app.post("/api/payments", async (req, res) => {
+app.post("/api/payment", async (req, res) => {
   try {
     const payment = await Payment.create(req.body);
     res.status(200).json(payment);

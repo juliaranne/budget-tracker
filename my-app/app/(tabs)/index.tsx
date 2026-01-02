@@ -20,16 +20,19 @@ enum ReducerActionKind {
   CATEGORY = "CATEGORY",
   AMOUNT = "AMOUNT",
   DATE = "DATE",
+  SUBMIT = "SUBMIT",
+  SUCCESS = "SUCCESS",
+  ERROR = "ERROR",
 }
 interface ReducerAction {
   type: ReducerActionKind;
   category?: string;
-  price?: string;
+  amount?: string;
   date?: string;
 }
 interface ReducerState {
   category: string | undefined;
-  price: string | undefined;
+  amount: string | undefined;
   date: string | undefined;
 }
 
@@ -43,8 +46,10 @@ const formatDate = (theDate: Date | undefined) => {
 
 const initialState = {
   date: formatDate(new Date()),
-  price: "",
+  amount: "",
   category: "",
+  error: "",
+  loading: false,
 };
 
 const reducer = (state: ReducerState, action: ReducerAction) => {
@@ -59,7 +64,7 @@ const reducer = (state: ReducerState, action: ReducerAction) => {
     case ReducerActionKind.AMOUNT:
       return {
         ...state,
-        price: action.price,
+        amount: action.amount,
       };
 
     case ReducerActionKind.DATE:
@@ -68,18 +73,52 @@ const reducer = (state: ReducerState, action: ReducerAction) => {
         date: action.date,
       };
 
+    case ReducerActionKind.SUBMIT:
+      return {
+        ...state,
+        loading: true,
+      };
+
+    case ReducerActionKind.ERROR:
+      return {
+        ...state,
+        loading: false,
+        error: true,
+      };
+
+    case ReducerActionKind.SUCCESS:
+      return initialState;
+
     default:
       return state;
   }
 };
 
-const handlePress = () => {
-  console.log("press");
-};
-
 export default function InputScreen() {
   const [state, dispatch] = useReducer(reducer, initialState);
   const selectedDate = useDateStore((s) => s.selectedDate);
+
+  const handlePress = () => {
+    const { amount, category } = state;
+    if (!amount || !category) {
+      return console.log("error");
+    }
+    dispatch({
+      type: ReducerActionKind.SUBMIT,
+    });
+    fetch("http://localhost:3000/api/payment", { method: "POST" })
+      .then((response) => response.json())
+      .then((response) => {
+        dispatch({
+          type: ReducerActionKind.SUCCESS,
+        });
+      })
+      .catch((e) => {
+        dispatch({
+          type: ReducerActionKind.ERROR,
+        });
+      });
+  };
 
   useEffect(() => {
     dispatch({
@@ -91,7 +130,7 @@ export default function InputScreen() {
   const updateValue = (value: string) =>
     dispatch({
       type: ReducerActionKind.AMOUNT,
-      price: value,
+      amount: value,
     });
 
   return (
