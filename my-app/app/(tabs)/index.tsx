@@ -29,6 +29,7 @@ interface ReducerAction {
   category?: string;
   amount?: string;
   date?: string;
+  error?: string;
 }
 interface ReducerState {
   category: string | undefined;
@@ -83,7 +84,7 @@ const reducer = (state: ReducerState, action: ReducerAction) => {
       return {
         ...state,
         loading: false,
-        error: true,
+        error: action.error,
       };
 
     case ReducerActionKind.SUCCESS:
@@ -101,7 +102,10 @@ export default function InputScreen() {
   const handlePress = () => {
     const { amount, category } = state;
     if (!amount || !category) {
-      return console.log("error");
+      return dispatch({
+        type: ReducerActionKind.ERROR,
+        error: "Please select an amount and category",
+      });
     }
     dispatch({
       type: ReducerActionKind.SUBMIT,
@@ -116,6 +120,7 @@ export default function InputScreen() {
       .catch((e) => {
         dispatch({
           type: ReducerActionKind.ERROR,
+          error: "There has been an error",
         });
       });
   };
