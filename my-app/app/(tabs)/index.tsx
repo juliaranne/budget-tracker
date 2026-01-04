@@ -28,13 +28,13 @@ interface ReducerAction {
   type: ReducerActionKind;
   category?: string;
   amount?: string;
-  date?: string;
+  date?: Date;
   error?: string;
 }
 interface ReducerState {
   category: string | undefined;
   amount: string | undefined;
-  date: string | undefined;
+  date: Date | undefined;
 }
 
 const formatDate = (theDate: Date | undefined) => {
@@ -46,7 +46,7 @@ const formatDate = (theDate: Date | undefined) => {
 };
 
 const initialState = {
-  date: formatDate(new Date()),
+  date: new Date(),
   amount: "",
   category: "",
   error: "",
@@ -100,7 +100,7 @@ export default function InputScreen() {
   const selectedDate = useDateStore((s) => s.selectedDate);
 
   const handlePress = () => {
-    const { amount, category } = state;
+    const { amount, category, date } = state;
     if (!amount || !category) {
       return dispatch({
         type: ReducerActionKind.ERROR,
@@ -110,7 +110,13 @@ export default function InputScreen() {
     dispatch({
       type: ReducerActionKind.SUBMIT,
     });
-    fetch("http://localhost:3000/api/payment", { method: "POST" })
+    fetch("http://localhost:3000/api/payment", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ date, amount, category }),
+    })
       .then((response) => response.json())
       .then((response) => {
         dispatch({
@@ -128,7 +134,7 @@ export default function InputScreen() {
   useEffect(() => {
     dispatch({
       type: ReducerActionKind.DATE,
-      date: formatDate(selectedDate),
+      date: selectedDate,
     });
   }, [selectedDate]);
 
@@ -168,7 +174,7 @@ export default function InputScreen() {
       >
         <View style={styles.dateRow}>
           <ThemedText style={styles.date} type="default">
-            {state.date}
+            {formatDate(state.date)}
           </ThemedText>
           <Link href="./modal">
             <ThemedText type="link">Change date</ThemedText>

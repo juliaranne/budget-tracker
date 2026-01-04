@@ -6,9 +6,9 @@ const PaymentSchema = mongoose.Schema(
       type: String,
       required: [true, "Missing category"],
     },
-    value: {
+    amount: {
       type: Number,
-      required: [true, "Missing value"],
+      required: [true, "Missing amount"],
     },
     date: {
       type: Date,
