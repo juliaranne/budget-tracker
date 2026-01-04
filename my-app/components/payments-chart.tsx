@@ -7,7 +7,7 @@ import * as d3 from "d3";
 
 type Payment = {
   date: Date;
-  value: number;
+  amount: number;
   category: string;
   _id: string;
 };
@@ -23,7 +23,7 @@ export default function PaymentsChart({ data }: PaymentsChartProps) {
   const height = width * GRAPH_APSECT_RATIO;
 
   const yDomain = data.map((item) => item.category);
-  const highestVal = Math.max(...data.map((item) => item.value));
+  const highestVal = Math.max(...data.map((item) => item.amount));
 
   const AnimatedRect = Animated.createAnimatedComponent(Rect);
   const animatedWidths = useRef(data.map(() => new Animated.Value(0))).current;
@@ -35,7 +35,7 @@ export default function PaymentsChart({ data }: PaymentsChartProps) {
       120,
       animatedWidths.map((anim, i) =>
         Animated.timing(anim, {
-          toValue: xScale(data[i].value),
+          toValue: xScale(data[i].amount),
           duration: 600,
           useNativeDriver: false,
         })
