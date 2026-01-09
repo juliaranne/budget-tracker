@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Loader from "@/components/loading-view";
 import PaymentsChart from "@/components/payments-chart";
 import useFetch from "@/hooks/use-fetch";
