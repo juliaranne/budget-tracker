@@ -81,7 +81,7 @@ export const Categories = {
     icon: "hammer.fill",
     display_name: "DIY",
   },
-  Fitness: {
+  fitness: {
     color: "crimson",
     icon: "figure.run",
     display_name: "Fitness",
