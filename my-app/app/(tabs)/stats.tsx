@@ -7,13 +7,13 @@ import { useFocusEffect } from "expo-router";
 export default function StatsChart() {
   const { data, loading, error, refetch } = useFetch(
     "http://localhost:3000/api/payments",
-    "GET"
+    "GET",
   );
 
   useFocusEffect(
     useCallback(() => {
       refetch();
-    }, [refetch])
+    }, [refetch]),
   );
 
   return (

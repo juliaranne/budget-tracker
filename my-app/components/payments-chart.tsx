@@ -16,6 +16,7 @@ export type PaymentsChartProps = {
 const GRAPH_APSECT_RATIO = 19.5 / 9;
 
 export default function PaymentsChart({ data }: PaymentsChartProps) {
+  console.log("new data", data);
   const [width, setWidth] = useState(0);
   const height = width * GRAPH_APSECT_RATIO;
 
@@ -25,7 +26,7 @@ export default function PaymentsChart({ data }: PaymentsChartProps) {
 
   const AnimatedRect = Animated.createAnimatedComponent(Rect);
   const animatedWidths = useRef(
-    dataArray.map(() => new Animated.Value(0))
+    dataArray.map(() => new Animated.Value(0)),
   ).current;
 
   useEffect(() => {
@@ -38,8 +39,8 @@ export default function PaymentsChart({ data }: PaymentsChartProps) {
           toValue: xScale(dataArray[i][1]),
           duration: 600,
           useNativeDriver: false,
-        })
-      )
+        }),
+      ),
     ).start();
   }, [width]);
 
@@ -71,7 +72,7 @@ export default function PaymentsChart({ data }: PaymentsChartProps) {
               rx={2.5}
               width={animatedWidths[i]}
               height={30}
-              fill={i % 2 === 0 ? "teal" : "navy"}
+              fill={"pink"}
             />
           ))}
 
