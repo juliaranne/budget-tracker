@@ -189,6 +189,7 @@ export default function InputScreen() {
             placeholder="I have spent"
             style={styles.input}
             changeEvent={updateValue}
+            value={state.amount}
           ></ThemedInput>
           <Pressable
             onPress={handlePress}

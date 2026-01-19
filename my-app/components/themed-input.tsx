@@ -14,6 +14,7 @@ export type InputProps = TextInputProps & {
   keyboardType?: "default" | "numeric";
   placeholder?: string;
   changeEvent: (value: string) => void;
+  value: string | undefined;
 };
 
 export function ThemedInput({
@@ -21,16 +22,16 @@ export function ThemedInput({
   lightColor,
   darkColor,
   changeEvent,
-  ...otherProps
+  value,
+  keyboardType,
 }: InputProps) {
   const borderColor = useThemeColor(
     { light: lightColor, dark: darkColor },
-    "borderColor"
+    "borderColor",
   );
   const color = useThemeColor({ light: darkColor, dark: lightColor }, "text");
 
   const handleChange = (value: string) => {
-    console.log("change");
     changeEvent(value);
   };
 
@@ -41,7 +42,8 @@ export function ThemedInput({
         { color, borderColor, borderWidth: 1, borderRadius: 6, padding: 15 },
         style,
       ]}
-      {...otherProps}
+      value={value}
+      keyboardType={keyboardType}
     />
   );
 }
