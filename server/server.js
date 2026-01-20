@@ -26,16 +26,38 @@ app.get("/", (req, res) => {
 app.get("/api/payments", async (req, res) => {
   try {
     const payments = await Payment.find({});
+    const today = new Date();
+    const thisYear = today.getFullYear();
+    const thisMonth = today.getMonth();
+    const lastMonth = !today.getMonth() ? 11 : today.getMonth() - 1;
 
-    const paymentByCategory = Object.create(null);
-    for (const payment of payments) {
-      if (!paymentByCategory[payment.category]) {
-        paymentByCategory[payment.category] = payment.amount;
-      } else {
-        paymentByCategory[payment.category] += payment.amount;
+    const currentPayments = payments.filter(
+      (payment) =>
+        payment.date.getFullYear() === thisYear &&
+        payment.date.getMonth() === thisMonth,
+    );
+
+    const last_month_total = payments.reduce((total, payment) => {
+      if (payment.date.getMonth() === lastMonth) {
+        return (total += payment.amount);
       }
+      return total;
+    }, 0);
+
+    const paymentByCategory = {
+      total: 0,
+      last_month: last_month_total,
+      results: {},
+    };
+    for (const payment of currentPayments) {
+      if (!paymentByCategory.results[payment.category]) {
+        paymentByCategory.results[payment.category] = payment.amount;
+      } else {
+        paymentByCategory.results[payment.category] += payment.amount;
+      }
+      paymentByCategory.total += payment.amount;
     }
-    // console.log(payments);
+
     res.status(200).json(paymentByCategory);
   } catch (e) {
     res.status(500).json({ message: e.message });
