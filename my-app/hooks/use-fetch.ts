@@ -14,7 +14,7 @@ function useFetch(url: string, type: string) {
 
       const response = await fetch(url, { method: type, signal });
       const json = await response.json();
-      setData(json.results);
+      setData(json);
     } catch {
       setError("An error occurred. Awkward..");
     } finally {

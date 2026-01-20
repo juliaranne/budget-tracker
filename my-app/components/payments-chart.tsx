@@ -4,6 +4,7 @@ import { StyleSheet, Animated } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { ThemedView } from "@/components/themed-view";
 import * as d3 from "d3";
+import { ThemedText } from "./themed-text";
 
 type Payments = {
   [key: string]: number;
@@ -20,7 +21,7 @@ export default function PaymentsChart({ data }: PaymentsChartProps) {
   const [width, setWidth] = useState(0);
   const height = width * GRAPH_APSECT_RATIO;
 
-  const dataArray = Object.entries(data);
+  const dataArray = Object.entries(data?.results);
   const yDomain = dataArray.map(([key, value]) => key);
   const highestVal = Math.max(...dataArray.map(([key, value]) => value));
 
@@ -62,6 +63,7 @@ export default function PaymentsChart({ data }: PaymentsChartProps) {
         setWidth(ev.nativeEvent.layout.width);
       }}
     >
+      <ThemedText type="title">This month £{data.total}</ThemedText>
       <Svg width={width} height={height}>
         <G>
           {dataArray.map(([key, value], i) => (
