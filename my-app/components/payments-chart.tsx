@@ -5,28 +5,29 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { ThemedView } from "@/components/themed-view";
 import * as d3 from "d3";
 
-type Payment = {
-  date: Date;
-  amount: number;
-  category: string;
-  _id: string;
+type Payments = {
+  [key: string]: number;
 };
 
 export type PaymentsChartProps = {
-  data: Payment[];
+  data: Payments;
 };
 
 const GRAPH_APSECT_RATIO = 19.5 / 9;
 
 export default function PaymentsChart({ data }: PaymentsChartProps) {
+  console.log("new data", data);
   const [width, setWidth] = useState(0);
   const height = width * GRAPH_APSECT_RATIO;
 
-  const yDomain = data.map((item) => item.category);
-  const highestVal = Math.max(...data.map((item) => item.amount));
+  const dataArray = Object.entries(data);
+  const yDomain = dataArray.map(([key, value]) => key);
+  const highestVal = Math.max(...dataArray.map(([key, value]) => value));
 
   const AnimatedRect = Animated.createAnimatedComponent(Rect);
-  const animatedWidths = useRef(data.map(() => new Animated.Value(0))).current;
+  const animatedWidths = useRef(
+    dataArray.map(() => new Animated.Value(0)),
+  ).current;
 
   useEffect(() => {
     if (width === 0) return;
@@ -35,11 +36,11 @@ export default function PaymentsChart({ data }: PaymentsChartProps) {
       120,
       animatedWidths.map((anim, i) =>
         Animated.timing(anim, {
-          toValue: xScale(data[i].amount),
+          toValue: xScale(dataArray[i][1]),
           duration: 600,
           useNativeDriver: false,
-        })
-      )
+        }),
+      ),
     ).start();
   }, [width]);
 
@@ -63,27 +64,27 @@ export default function PaymentsChart({ data }: PaymentsChartProps) {
     >
       <Svg width={width} height={height}>
         <G>
-          {data.map((item, i) => (
+          {dataArray.map(([key, value], i) => (
             <AnimatedRect
-              key={item.category}
-              y={yScale(item.category)}
+              key={key}
+              y={yScale(key)}
               x={10}
               rx={2.5}
               width={animatedWidths[i]}
               height={30}
-              fill={i % 2 === 0 ? "teal" : "navy"}
+              fill={"pink"}
             />
           ))}
 
-          {data.map((item) => (
-            <ThemedView key={"label" + item.category}>
+          {dataArray.map(([key, value]) => (
+            <ThemedView key={"label" + key}>
               <Text
                 fontSize="16"
                 fill="white"
                 x={15}
-                y={(yScale(item.category) ?? 0) + 22}
+                y={(yScale(key) ?? 0) + 22}
               >
-                {item.category}
+                {key}
               </Text>
             </ThemedView>
           ))}

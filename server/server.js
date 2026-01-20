@@ -26,7 +26,17 @@ app.get("/", (req, res) => {
 app.get("/api/payments", async (req, res) => {
   try {
     const payments = await Payment.find({});
-    res.status(200).json(payments);
+
+    const paymentByCategory = Object.create(null);
+    for (const payment of payments) {
+      if (!paymentByCategory[payment.category]) {
+        paymentByCategory[payment.category] = payment.amount;
+      } else {
+        paymentByCategory[payment.category] += payment.amount;
+      }
+    }
+    // console.log(payments);
+    res.status(200).json(paymentByCategory);
   } catch (e) {
     res.status(500).json({ message: e.message });
   }
