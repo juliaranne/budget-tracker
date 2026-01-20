@@ -262,7 +262,7 @@ const styles = StyleSheet.create({
     padding: 15,
   },
   scroll: {
-    maxHeight: 350,
+    maxHeight: 390,
     paddingTop: 5,
   },
   categories: {
