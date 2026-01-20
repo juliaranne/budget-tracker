@@ -42,7 +42,7 @@ export default function PaymentsChart({ data }: PaymentsChartProps) {
         }),
       ),
     ).start();
-  }, [width]);
+  }, [width, data]);
 
   // Y height - number of categories * height of bar chart and space
   const yScale = d3
@@ -72,7 +72,7 @@ export default function PaymentsChart({ data }: PaymentsChartProps) {
               rx={2.5}
               width={animatedWidths[i]}
               height={30}
-              fill={"pink"}
+              fill={i % 2 === 0 ? "teal" : "navy"}
             />
           ))}
 
@@ -84,7 +84,7 @@ export default function PaymentsChart({ data }: PaymentsChartProps) {
                 x={15}
                 y={(yScale(key) ?? 0) + 22}
               >
-                {key}
+                {key.replace("_", " ")}
               </Text>
             </ThemedView>
           ))}
